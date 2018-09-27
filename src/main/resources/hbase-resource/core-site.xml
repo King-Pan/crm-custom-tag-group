@@ -1,0 +1,152 @@
+<configuration>
+
+    <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://HBBDCFW</value>
+        <final>true</final>
+    </property>
+
+    <property>
+        <name>fs.trash.interval</name>
+        <value>360</value>
+    </property>
+
+    <property>
+        <name>ha.failover-controller.active-standby-elector.zk.op.retries</name>
+        <value>120</value>
+    </property>
+
+    <property>
+        <name>ha.zookeeper.acl</name>
+        <value>sasl:nn:rwcda</value>
+    </property>
+
+    <property>
+        <name>ha.zookeeper.quorum</name>
+        <value>hbbdc-fw-dn-27:2181,hbbdc-fw-dn-37:2181,hbbdc-fw-dn-17:2181</value>
+    </property>
+
+    <property>
+        <name>hadoop.http.authentication.simple.anonymous.allowed</name>
+        <value>true</value>
+    </property>
+
+    <property>
+        <name>hadoop.proxyuser.ambari-server-hbbdcfw.groups</name>
+        <value>*</value>
+    </property>
+
+    <property>
+        <name>hadoop.proxyuser.ambari-server-hbbdcfw.hosts</name>
+        <value>*</value>
+    </property>
+
+    <property>
+        <name>hadoop.proxyuser.hive.groups</name>
+        <value>*</value>
+    </property>
+
+    <property>
+        <name>hadoop.proxyuser.hive.hosts</name>
+        <value>*</value>
+    </property>
+
+    <property>
+        <name>hadoop.proxyuser.HTTP.groups</name>
+        <value>*</value>
+    </property>
+
+    <property>
+        <name>hadoop.proxyuser.HTTP.hosts</name>
+        <value>*</value>
+    </property>
+
+    <property>
+        <name>hadoop.proxyuser.ocdc.groups</name>
+        <value>*</value>
+    </property>
+
+    <property>
+        <name>hadoop.proxyuser.ocdc.hosts</name>
+        <value>*</value>
+    </property>
+
+    <property>
+        <name>hadoop.security.auth_to_local</name>
+        <value>RULE:[1:$1@$0](ocdc-hbbdcfw@HBBDCFW.COM)s/.*/ocdc/
+            RULE:[1:$1@$0](.*@HBBDCFW.COM)s/@.*//
+            RULE:[2:$1@$0](amshbase@HBBDCFW.COM)s/.*/ocdc/
+            RULE:[2:$1@$0](amszk@HBBDCFW.COM)s/.*/ocdc/
+            RULE:[2:$1@$0](dn@HBBDCFW.COM)s/.*/ocdc/
+            RULE:[2:$1@$0](hbase@HBBDCFW.COM)s/.*/ocdc/
+            RULE:[2:$1@$0](hive@HBBDCFW.COM)s/.*/ocdc/
+            RULE:[2:$1@$0](jhs@HBBDCFW.COM)s/.*/ocdc/
+            RULE:[2:$1@$0](jn@HBBDCFW.COM)s/.*/ocdc/
+            RULE:[2:$1@$0](nm@HBBDCFW.COM)s/.*/ocdc/
+            RULE:[2:$1@$0](nn@HBBDCFW.COM)s/.*/ocdc/
+            RULE:[2:$1@$0](rangeradmin@HBBDCFW.COM)s/.*/ocdc/
+            RULE:[2:$1@$0](rangerusersync@HBBDCFW.COM)s/.*/rangerusersync/
+            RULE:[2:$1@$0](rm@HBBDCFW.COM)s/.*/ocdc/
+            RULE:[2:$1@$0](yarn@HBBDCFW.COM)s/.*/ocdc/
+            DEFAULT
+        </value>
+    </property>
+
+    <property>
+        <name>hadoop.security.authentication</name>
+        <value>kerberos</value>
+    </property>
+
+    <property>
+        <name>hadoop.security.authorization</name>
+        <value>true</value>
+    </property>
+
+    <property>
+        <name>io.compression.codecs</name>
+        <value>
+            org.apache.hadoop.io.compress.GzipCodec,org.apache.hadoop.io.compress.DefaultCodec,org.apache.hadoop.io.compress.SnappyCodec
+        </value>
+    </property>
+
+    <property>
+        <name>io.file.buffer.size</name>
+        <value>131072</value>
+    </property>
+
+    <property>
+        <name>io.serializations</name>
+        <value>org.apache.hadoop.io.serializer.WritableSerialization</value>
+    </property>
+
+    <property>
+        <name>ipc.client.connect.max.retries</name>
+        <value>50</value>
+    </property>
+
+    <property>
+        <name>ipc.client.connection.maxidletime</name>
+        <value>30000</value>
+    </property>
+
+    <property>
+        <name>ipc.client.idlethreshold</name>
+        <value>8000</value>
+    </property>
+
+    <property>
+        <name>ipc.server.tcpnodelay</name>
+        <value>true</value>
+    </property>
+
+    <property>
+        <name>mapreduce.jobtracker.webinterface.trusted</name>
+        <value>false</value>
+    </property>
+
+    <property>
+        <name>net.topology.script.file.name</name>
+        <value>/etc/hadoop/conf/topology_script.py</value>
+    </property>
+
+</configuration>

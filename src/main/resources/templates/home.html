@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link type="text/css" rel="stylesheet" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}"
+          href="webjars/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet"
+          href="webjars/bootstrap-datetimepicker/2.4.2/css/bootstrap-datetimepicker.min.css"
+          th:href="@{/webjars/bootstrap-datetimepicker/2.4.2/css/bootstrap-datetimepicker.min.css}"/>
+    <link type="text/css" rel="stylesheet"
+          href="webjars/vue2-datepicker/2.0.4/lib/datepicker.css"
+          th:href="@{/webjars/vue2-datepicker/2.0.4/lib/datepicker.css}"/>
+</head>
+<body>
+<div id="app" style="margin: 20px;">
+    <div class="page-header">
+        <h1>Hbase集群配置
+            <small>手动切换Hbase集群</small>
+        </h1>
+    </div>
+
+
+    <div class="panel panel-default">
+        <div class="panel-heading">配置信息</div>
+        <div class="panel-body">
+            <form class="form-horizontal" role="form">
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label for="date" class="col-sm-2 control-label" style="text-align: right">模式</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" v-model="model" style="width: 200px;" disabled>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label for="date" class="col-sm-2 control-label">选择的集群</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" v-model="typeMsg" style="width: 200px;" disabled>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label for="date" class="col-sm-2 control-label">日期</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" v-model="date" style="width: 200px;" disabled>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">手动配置</div>
+        <div class="panel-body">
+            <form class="form-horizontal" action="setDate" role="form">
+                <div class="form-group">
+                    <label for="date" class="col-sm-2 control-label">选择集群</label>
+                    <div class="col-sm-10">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="optionsRadios" v-model="type" value="proxy" checked>
+                                代理集群
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="optionsRadios" v-model="type" id="optionsRadios2"
+                                       value="prod">
+                                生产集群
+                            </label>
+                        </div>
+                        <div class="radio disabled">
+                            <label>
+                                <input type="radio" name="optionsRadios" v-model="type" id="optionsRadios3"
+                                       value="service">
+                                服务集群
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="date" class="col-sm-2 control-label">选择日期</label>
+                    <div class="col-sm-10">
+                        <input id="date" class="form-control" style="width: 200px;" v-model="date" size="16" type="text"
+                               value=""
+                               readonly>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" @click="change('auto')" class="btn btn-default">自动</button>
+                        <button type="button" @click="change('handler')" class="btn btn-default">手动切换</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="webjars/vue/2.5.16/dist/vue.min.js"
+        th:src="@{/webjars/vue/2.5.16/dist/vue.min.js}"></script>
+<script type="text/javascript" src="webjars/jquery/1.11.1/jquery.min.js"
+        th:src="@{/webjars/jquery/1.11.1/jquery.min.js}"></script>
+<script type="text/javascript" src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"
+        th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+<script type="text/javascript" src="webjars/bootstrap-datetimepicker/2.4.2/js/bootstrap-datetimepicker.min.js"
+        th:src="@{/webjars/bootstrap-datetimepicker/2.4.2/js/bootstrap-datetimepicker.min.js}"></script>
+<script type="text/javascript" src="webjars/bootstrap-datetimepicker/2.4.2/js/locales/bootstrap-datetimepicker.zh-CN.js"
+        th:src="@{/webjars/bootstrap-datetimepicker/2.4.2/js/locales/bootstrap-datetimepicker.zh-CN.js}"></script>
+
+<script src="webjars/vue2-datepicker/2.0.4/lib/datepicker.js"
+        th:src="@{/webjars/vue2-datepicker/2.0.4/lib/datepicker.js}"></script>
+
+
+<script>
+    Date.prototype.format = function (format) {
+        var o = {
+            "M+": this.getMonth() + 1, //month
+            "d+": this.getDate(),    //day
+            "h+": this.getHours(),   //hour
+            "m+": this.getMinutes(), //minute
+            "s+": this.getSeconds(), //second
+            "q+": Math.floor((this.getMonth() + 3) / 3),  //quarter
+            "S": this.getMilliseconds() //millisecond
+        }
+        if (/(y+)/.test(format)) format = format.replace(RegExp.$1,
+            (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o) if (new RegExp("(" + k + ")").test(format))
+            format = format.replace(RegExp.$1,
+                RegExp.$1.length == 1 ? o[k] :
+                    ("00" + o[k]).substr(("" + o[k]).length));
+        return format;
+    }
+    $(function () {
+        $("#date").datetimepicker({
+            format: "yyyymmdd",
+            language: 'zh-CN',
+            autoclose: true,
+            todayBtn: true,
+            minuteStep: 10,
+            startView: 2,
+            minView: 2,
+            clearBtn: true //清除按钮
+        }).on('changeDate', function (ev) {
+            var time = new Date(ev.date.valueOf());
+            var date = time.format('yyyyMMdd');
+            console.log(date);
+            vm.$data.date = date;
+        });
+    });
+
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            type: 'proxy',
+            date: '',
+            model: '自动'
+        },
+        created: function () {
+            $.ajax({
+                type: 'get',
+                url: 'getData',
+                success: function (data) {
+                    console.log(data);
+                    vm.$data.model = data.model ? '自动' : '手动';
+                    vm.$data.type = data.type;
+                    vm.$data.date = data.date;
+                }
+            });
+
+        },
+        computed: {
+            typeMsg: function () {
+                var msg = '';
+                if (this.type === 'proxy') {
+                    msg = '代理集群';
+                } else if (this.type === 'prod') {
+                    msg = '生产集群';
+                } else if (this.type === 'service') {
+                    msg = '服务集群';
+                }
+                return msg;
+            }
+        },
+        methods: {
+            change: function (model) {
+                var dt = 'model=' + model + "&type=" + this.type + "&date=" + this.date;
+                if (model === 'auto') {
+                    this.model = '自动';
+                    this.date = '';
+                    this.type = 'proxy';
+                } else {
+                    this.model = '手动';
+                }
+                $.ajax({
+                    type: 'post',
+                    url: 'change',
+                    data: dt,
+                    success: function (data) {
+                        console.log(data);
+                        if (data.status == "200") {
+                            alert("切换成功");
+                        } else {
+                            alert("切换成功");
+                        }
+                    }
+                });
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
