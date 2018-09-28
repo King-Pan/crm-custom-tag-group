@@ -52,17 +52,19 @@ public class HbaseServiceConnection {
         config.set("hbase.security.authentication", "kerberos");
         config.set("kerberos.principal", hbaseInfo.getPrincipal());
         config.set("hbase.master.kerberos.principal", hbaseInfo.getPrincipal());
+                //principal
+                //principal
         config.set("hbase.regionserver.kerberos.principal", hbaseInfo.getPrincipal());
         config.set("keytab.file", hbaseInfo.getKeytabFile());
         config.set("hbase.zookeeper.quorum", hosts);
         config.set("hbase.zookeeper.property.clientPort", port);
         config.set("zookeeper.recovery.retry", "3");
-        //HBASE 每次重连叠加时间: 第一次重连等待50ms 第二次重连等待100ms 第三次重连等待150ms
-        config.set("hbase.client.pause", hbaseInfo.getPause());
-        //HBASE 重连次数 默认为31次
-        config.set("hbase.client.retries.number", hbaseInfo.getNumber());
-        //HBASE 一次rpc调用的超时时间
-        config.set("hbase.rpc.timeout", hbaseInfo.getRpcTimeout());
+//        //HBASE 每次重连叠加时间: 第一次重连等待50ms 第二次重连等待100ms 第三次重连等待150ms
+//        config.set("hbase.client.pause", hbaseInfo.getPause());
+//        //HBASE 重连次数 默认为31次
+//        config.set("hbase.client.retries.number", hbaseInfo.getNumber());
+//        //HBASE 一次rpc调用的超时时间
+//        config.set("hbase.rpc.timeout", hbaseInfo.getRpcTimeout());
         config.addResource("hbase-resource/core-site.xml");
         config.addResource("hbase-resource/hbase-site.xml");
         config.addResource("hbase-resource/hdfs-site.xml");

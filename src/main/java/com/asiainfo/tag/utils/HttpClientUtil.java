@@ -65,10 +65,13 @@ public class HttpClientUtil {
             // 判断返回状态是否为200
             if (response.getStatusLine().getStatusCode() == 200) {
                 resultString = EntityUtils.toString(response.getEntity(), "UTF-8");
+            } else {
+                throw new RuntimeException("请求失败：状态码:" + response.getStatusLine().getStatusCode() + "地址=" + url + ",参数=" + param);
             }
         } catch (Exception e) {
             e.printStackTrace();
             log.error("同步失败：请求地址=" + url + ",参数=" + param);
+            throw new RuntimeException("请求失败：地址=" + url + ",参数=" + param);
         } finally {
             try {
                 if (response != null) {
