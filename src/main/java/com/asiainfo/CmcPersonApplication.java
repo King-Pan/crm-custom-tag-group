@@ -1,4 +1,4 @@
-package com.asiainfo.tag;
+package com.asiainfo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

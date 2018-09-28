@@ -1,6 +1,6 @@
 package com.asiainfo.tag.config;
 
-import com.asiainfo.tag.webservice.CustGroupCheck;
+import com.asiainfo.service.CustGroupCheck;
 import org.apache.cxf.Bus;
 import org.apache.cxf.jaxws.EndpointImpl;
 import org.springframework.beans.factory.annotation.Autowired;

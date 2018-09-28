@@ -12,6 +12,8 @@ import java.util.Date;
  */
 public class SettingCache {
 
+    public static final String AUTO = "AUTO";
+
     public static final String DEFAULT_TYPE = "prod";
 
     public static final String PROD_TYPE = "prod";

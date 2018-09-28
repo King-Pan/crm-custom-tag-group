@@ -133,11 +133,11 @@
             <version>15.0</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.asiainfo</groupId>
-            <artifactId>dacp-md5-encrypt</artifactId>
-            <version>1.0</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.asiainfo</groupId>-->
+            <!--<artifactId>dacp-md5-encrypt</artifactId>-->
+            <!--<version>1.0</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>

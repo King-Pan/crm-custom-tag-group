@@ -1,1 +1,0 @@
-mvn install:install-file -DgroupId=com.asiainfo -DartifactId=dacp-md5-encrypt -Dversion=1.0 -Dpackaging=jar -Dfile=/Users/king-pan/git_repository/cmc-person/lib/sdk.jar

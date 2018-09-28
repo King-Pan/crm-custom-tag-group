@@ -51,8 +51,8 @@ public class HbaseConnection {
         config.set("hbase.client.retries.number", hbaseInfo.getNumber());
         //HBASE 一次rpc调用的超时时间
         config.set("hbase.rpc.timeout", hbaseInfo.getRpcTimeout());
-        config.set("zookeeper.recovery.retry","5");
-        //config.set("zookeeper.recovery.retry.intervalmill","100");
+//        config.set("zookeeper.recovery.retry","5");
+//        config.set("zookeeper.recovery.retry.intervalmill","100");
         config.set("hbase.client.scanner.timeout.period", "10000");
 
 

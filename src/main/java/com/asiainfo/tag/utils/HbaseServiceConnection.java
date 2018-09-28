@@ -46,27 +46,31 @@ public class HbaseServiceConnection {
         String port = "2181";
         //klist -kte ocdc01.keytab
         //krb.conf   放在/etc/目录下
-        System.setProperty("java.security.krb5.conf", "/root/crm-person-api/krb5_fw.conf");
-        String principal = "ocdc-hbbdcfw@HBBDCFW.COM";
-        String keytabPath = "/root/crm-person-api/ocdc01.keytab";
+        System.setProperty("java.security.krb5.conf", hbaseInfo.getKrb5());
 
         config.set("hadoop.security.authentication", "kerberos");
         config.set("hbase.security.authentication", "kerberos");
-        config.set("kerberos.principal", principal);
-        config.set("hbase.master.kerberos.principal", "hbase/_HOST@HBBDCFW.COM");
-        config.set("hbase.regionserver.kerberos.principal", "hbase/_HOST@HBBDCFW.COM");
-        config.set("keytab.file", keytabPath);
+        config.set("kerberos.principal", hbaseInfo.getPrincipal());
+        config.set("hbase.master.kerberos.principal", hbaseInfo.getPrincipal());
+        config.set("hbase.regionserver.kerberos.principal", hbaseInfo.getPrincipal());
+        config.set("keytab.file", hbaseInfo.getKeytabFile());
         config.set("hbase.zookeeper.quorum", hosts);
         config.set("hbase.zookeeper.property.clientPort", port);
-        config.set("zookeeper.recovery.retry","3");
+        config.set("zookeeper.recovery.retry", "3");
+        //HBASE 每次重连叠加时间: 第一次重连等待50ms 第二次重连等待100ms 第三次重连等待150ms
+        config.set("hbase.client.pause", hbaseInfo.getPause());
+        //HBASE 重连次数 默认为31次
+        config.set("hbase.client.retries.number", hbaseInfo.getNumber());
+        //HBASE 一次rpc调用的超时时间
+        config.set("hbase.rpc.timeout", hbaseInfo.getRpcTimeout());
         config.addResource("hbase-resource/core-site.xml");
         config.addResource("hbase-resource/hbase-site.xml");
         config.addResource("hbase-resource/hdfs-site.xml");
 
         try {
             UserGroupInformation.setConfiguration(config);
-            UserGroupInformation ugi = UserGroupInformation.loginUserFromKeytabAndReturnUGI(principal,
-                    keytabPath);
+            UserGroupInformation ugi = UserGroupInformation.loginUserFromKeytabAndReturnUGI(hbaseInfo.getPrincipal(),
+                    hbaseInfo.getKeytabFile());
             UserGroupInformation.setLoginUser(ugi);
             connection = ConnectionFactory.createConnection(config);
             hBaseAdmin = new HBaseAdmin(config);
