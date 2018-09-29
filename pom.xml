@@ -170,11 +170,6 @@
             <version>2.4.2</version>
         </dependency>
         <dependency>
-            <groupId>org.webjars.npm</groupId>
-            <artifactId>vue2-datepicker</artifactId>
-            <version>2.0.4</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-spring-boot-starter-jaxws</artifactId>
             <version>3.2.5</version>
