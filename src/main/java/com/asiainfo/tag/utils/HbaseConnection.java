@@ -1,6 +1,7 @@
 package com.asiainfo.tag.utils;
 
 import com.asiainfo.tag.model.HbaseInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.Connection;
@@ -17,6 +18,7 @@ import java.io.IOException;
  * Time: 上午10:07
  * Description: No Description
  */
+@Slf4j
 public class HbaseConnection {
     private Configuration config;
     private Connection connection;
@@ -34,6 +36,7 @@ public class HbaseConnection {
 
 
     private HbaseConnection() {
+        log.error("======================>初始化【生产集群】  开始<======================");
         config = HBaseConfiguration.create();
         //zookeeper代理地址
 
@@ -45,23 +48,15 @@ public class HbaseConnection {
         // 客户端端口号
         config.set("hbase.zookeeper.property.clientPort", hbaseInfo.getClientPort());
         config.set("fs.defaultFS", "hdfs://hbcm");
-        //HBASE 每次重连叠加时间: 第一次重连等待50ms 第二次重连等待100ms 第三次重连等待150ms
-        config.set("hbase.client.pause", hbaseInfo.getPause());
-        //HBASE 重连次数 默认为31次
-        config.set("hbase.client.retries.number", hbaseInfo.getNumber());
-        //HBASE 一次rpc调用的超时时间
-        config.set("hbase.rpc.timeout", hbaseInfo.getRpcTimeout());
-//        config.set("zookeeper.recovery.retry","5");
-//        config.set("zookeeper.recovery.retry.intervalmill","100");
-        config.set("hbase.client.scanner.timeout.period", "10000");
-
-
+        log.error("======================>初始化【生产集群】  参数: hbase.zookeeper.quorum->{}", hbaseInfo.getQuorum());
+        log.error("======================>初始化【生产集群】  参数: hbase.zookeeper.property.clientPort->{}", hbaseInfo.getClientPort());
         try {
             connection = ConnectionFactory.createConnection(config);
             hBaseAdmin = new HBaseAdmin(connection);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("======================>初始化【生产集群】  异常->" + e.getMessage(), e);
         }
+        log.error("======================>初始化【生产集群】  结束<======================");
     }
 
     public Configuration getConfig() {

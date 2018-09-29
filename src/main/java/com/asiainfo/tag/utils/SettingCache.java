@@ -26,5 +26,4 @@ public class SettingCache {
 
     public static boolean IS_AUTOSWITCH = true;
 
-
 }

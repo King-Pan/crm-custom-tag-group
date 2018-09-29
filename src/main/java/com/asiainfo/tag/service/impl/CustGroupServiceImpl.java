@@ -29,11 +29,9 @@ import java.util.Map;
 @Service
 public class CustGroupServiceImpl implements CustGroupService {
 
-
-    @Autowired
-    private ServiceCustGroupProxy serviceCustGroupProxy;
-
     private static final String TABLE_NAME_PREFIX = "COC_CUSTOMER_GROUP_";
+
+    MD5RowKeyGenerator md5RowKeyGenerator = new MD5RowKeyGenerator();
 
     @Override
     public String checkTagInGroup(String jsonParma) {
@@ -46,9 +44,9 @@ public class CustGroupServiceImpl implements CustGroupService {
         Map<String, String> rt = new HashMap<>(20);
         try {
             if (HBaseUtils.tableExists(tableName)) {
-                String rowKey = MD5RowKeyGenerator.generatePrefix(telno) + telno + "|" + groupid;
+                String rowKey = md5RowKeyGenerator.generatePrefix(telno) + telno + "|" + groupid;
                 String groupId = String.format("%08d", Long.valueOf(groupid.substring(6, groupid.length())) + 1);
-                String enKey = MD5RowKeyGenerator.generatePrefix(telno) + telno + "|" + groupid.substring(0, 6) + groupId;
+                String enKey = md5RowKeyGenerator.generatePrefix(telno) + telno + "|" + groupid.substring(0, 6) + groupId;
                 log.info("查询客户群是否存在startRow:" + rowKey);
                 log.info("查询客户群是否存在endRow:" + enKey);
                 if (HBaseUtils.scanQueryList(rowKey, enKey, tableName).size() > 0) {
@@ -69,9 +67,6 @@ public class CustGroupServiceImpl implements CustGroupService {
             rt.put("retcode", "-2");
             log.error("查询集群:{}", SettingCache.TYPE);
             rt.put("errmsg", "Hbase查询出错：" + e.getMessage());
-            if (SettingCache.TYPE.equals(SettingCache.DEFAULT_TYPE) && SettingCache.IS_AUTOSWITCH) {
-                return serviceCustGroupProxy.checkTagInGroup(jsonParma);
-            }
         }
 
         String resultInfo = JSONObject.toJSONString(rt);
@@ -95,8 +90,8 @@ public class CustGroupServiceImpl implements CustGroupService {
         try {
             if (HBaseUtils.tableExists(tableName)) {
                 //13477343118 - 开始行： oc513477343118
-                String rowKey = MD5RowKeyGenerator.generatePrefix(telno) + telno;
-                String endKey = MD5RowKeyGenerator.generatePrefix(telno) + String.valueOf(Long.valueOf(telno) + 1);
+                String rowKey = md5RowKeyGenerator.generatePrefix(telno) + telno;
+                String endKey = md5RowKeyGenerator.generatePrefix(telno) + String.valueOf(Long.valueOf(telno) + 1);
                 log.info("查询客户信息: rowKey=" + rowKey + ",endKey=" + rowKey);
                 List<String> queryList = HBaseUtils.scanQueryList(rowKey, endKey, tableName);
                 List<Map<String, String>> tmp = new ArrayList<>(20);
@@ -119,9 +114,6 @@ public class CustGroupServiceImpl implements CustGroupService {
             rt.put("retcode", "-2");
             log.error("查询集群:{}", SettingCache.TYPE);
             rt.put("errmsg", "Hbase查询出错：" + e.getMessage());
-            if (SettingCache.TYPE.equals(SettingCache.DEFAULT_TYPE) && SettingCache.IS_AUTOSWITCH) {
-                return serviceCustGroupProxy.getUserTagGroupList(jsonParma);
-            }
         }
 
         String resultInfo = JSONObject.toJSONString(rt);

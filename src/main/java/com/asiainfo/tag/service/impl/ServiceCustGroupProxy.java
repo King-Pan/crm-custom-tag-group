@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
  * Time: 下午5:17
  * Description: No Description
  */
-@Service
+//@Service
 public class ServiceCustGroupProxy implements CustGroupService {
 
     @Autowired

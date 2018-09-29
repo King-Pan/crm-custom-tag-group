@@ -42,61 +42,22 @@ public class HBaseUtils {
     private synchronized static HBaseAdmin getHBaseAdmin() {
         HBaseAdmin hBaseAdmin = null;
         log.info("======================>获取HBaseAdmin  开始<======================");
-        if (SettingCache.IS_AUTOSWITCH) {
-            log.info("======================>自动切换集群实现双活<======================");
-            try {
-                hBaseAdmin = HbaseConnection.getInstance().gethBaseAdmin();
-            } catch (Exception e) {
-                log.error("生成集群hBaseAdmin获取失败", e);
-                try {
-                    hBaseAdmin = HbaseServiceConnection.getInstance().gethBaseAdmin();
-                } catch (Exception e1) {
-                    log.error("服务集群hBaseAdmin获取失败", e1);
-                    log.error("======================>获取hBaseAdmin失败");
-                }
-            }
-            log.info("======================>自动切换集群实现双活<======================");
+        if (SettingCache.TYPE.equals(SettingCache.DEFAULT_TYPE)) {
+            hBaseAdmin = HbaseConnection.getInstance().gethBaseAdmin();
+            log.info("======================>生产集群 hBaseAdmin<======================");
+        } else if (SettingCache.TYPE.equals(SettingCache.SERVICE_TYPE)) {
+            hBaseAdmin = HbaseServiceConnection.getInstance().gethBaseAdmin();
+            log.info("======================>服务集群 hBaseAdmin<======================");
         } else {
-            log.info("======================>手动切换集群实现双活<======================");
-            if (SettingCache.TYPE.equals(SettingCache.DEFAULT_TYPE)) {
-                hBaseAdmin = HbaseConnection.getInstance().gethBaseAdmin();
-                log.info("======================>生产集群 hBaseAdmin<======================");
-            } else if (SettingCache.TYPE.equals(SettingCache.SERVICE_TYPE)) {
-                hBaseAdmin = HbaseConnection.getInstance().gethBaseAdmin();
-                log.info("======================>服务集群 hBaseAdmin<======================");
-            } else {
-                log.error("设置集群参数有误：{}-不存在", SettingCache.TYPE);
-            }
-            log.info("======================>手动切换集群实现双活<======================");
+            log.error("设置集群参数有误：{}-不存在", SettingCache.TYPE);
         }
         log.info("======================>获取HBaseAdmin  结束<======================");
         return hBaseAdmin;
     }
 
-    /**
-     * 根据主键rowKey查询一行数据
-     *
-     * @param tableName 表名
-     * @param rowKey    主键ID
-     * @return Result
-     */
-    public static Result getSimpleRow(String tableName, String rowKey) throws Exception {
-        log.info("准备获取Table： " + tableName);
-        Table table = getConnection().getTable(TableName.valueOf(tableName));
-        log.info("获取Table： " + tableName);
-        log.info("准备获取rowKey: " + rowKey);
-        Get get = new Get(rowKey.getBytes());
-        log.info("获取rowKey: " + rowKey);
-
-        log.info("准备获取Result: ");
-        Result result = table.get(get);
-        log.info("获取Result: " + result);
-        return result;
-    }
-
 
     public static Boolean tableExists(String tableName) {
-        boolean isExists = false;
+        boolean isExists;
         try {
             log.info("=========================tableExists begin=========================");
             log.info("=========================tableExists tableName-->" + tableName);
@@ -117,12 +78,12 @@ public class HBaseUtils {
     public static ResultScanner scanQuery(String startRowKey,
                                           String endRowKey,
                                           String tableName) throws Exception {
-        log.debug("================scan query=================");
-        log.debug("startRowKey=[" + startRowKey + "]");
-        log.debug("endRowKey=[" + endRowKey + "]");
+        log.info("================scan query=================");
+        log.info("startRowKey=[" + startRowKey + "]");
+        log.info("endRowKey=[" + endRowKey + "]");
         Table query = getConnection().getTable(TableName.valueOf(tableName));
         Scan scan = new Scan();
-        scan.setStartRow(Bytes.toBytes(tableName));
+        scan.setStartRow(Bytes.toBytes(startRowKey));
         scan.setStopRow(Bytes.toBytes(endRowKey));
         ResultScanner rs = query.getScanner(scan);
         return rs;
@@ -135,48 +96,28 @@ public class HBaseUtils {
         List<String> result = new ArrayList<>(10);
 
         try {
-            log.debug("================scan query=================");
-            log.debug("startRowKey=[" + startRowKey + "]");
-            log.debug("endRowKey=[" + endRowKey + "]");
+            log.info("================scan List=================");
+            log.info("startRowKey=[" + startRowKey + "]");
+            log.info("endRowKey=[" + endRowKey + "]");
+            log.info("================scanQueryList 获取客户群信息getTable  begin ================");
             Table query = getConnection().getTable(TableName.valueOf(tableName));
+            log.info("================scanQueryList 获取客户群信息getTable  end ================");
             Scan scan = new Scan();
-            scan.setStartRow(Bytes.toBytes(tableName));
+            scan.setStartRow(Bytes.toBytes(startRowKey));
             scan.setStopRow(Bytes.toBytes(endRowKey));
             ResultScanner rs = query.getScanner(scan);
-            Iterator<Result> it = rs.iterator();
-            while (it.hasNext()) {
-                result.add(Bytes.toString(it.next().getRow()));
+            log.info("================scanQueryList 封装数据 begin ================");
+            for (Result res : rs) {
+                log.info("================scanQueryList 数据->[" + Bytes.toString(res.getRow()) + "]");
+                result.add(Bytes.toString(res.getRow()));
             }
+            log.info("================scanQueryList 封装数据 end ================");
         } catch (IOException e) {
             e.printStackTrace();
             log.error("[scanQueryList]方法出错: " + e.getMessage(), e);
             throw new RuntimeException("查询数据列表【scanQueryList】出错");
         }
         return result;
-    }
-
-    /**
-     * 获取最新的表名
-     *
-     * @param prefix
-     * @return String
-     */
-    public static String getTableName(String prefix) throws Exception {
-        String tableName;
-        int n = -1;
-        while (true) {
-            tableName = prefix + DateUtils.getBeforeNDay(n);
-            if (tableExists(tableName)) {
-                log.info("查询的表名为-->" + tableName);
-                break;
-            }
-            if (n <= -5) {
-                log.error("未找到数据表");
-                throw new RuntimeException("未找到数据表");
-            }
-            n--;
-        }
-        return tableName;
     }
 
 
