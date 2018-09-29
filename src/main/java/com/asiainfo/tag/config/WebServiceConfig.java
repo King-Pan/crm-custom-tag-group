@@ -30,7 +30,7 @@ public class WebServiceConfig {
     @Bean
     public Endpoint endpoint() {
         EndpointImpl endpoint = new EndpointImpl(bus, custGroupCheck);
-        endpoint.publish("/custgroupcheck");
+        endpoint.publish("/custcroupcheck");
         return endpoint;
     }
 }
