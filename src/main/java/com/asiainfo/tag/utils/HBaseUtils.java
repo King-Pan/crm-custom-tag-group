@@ -23,35 +23,35 @@ public class HBaseUtils {
 
     private synchronized static Connection getConnection() {
         Connection connection = null;
-        log.info("======================>获取Hbase连接  开始<======================");
+        log.debug("======================>获取Hbase连接  开始<======================");
         if (SettingCache.TYPE.equals(SettingCache.DEFAULT_TYPE)) {
-            log.info("======================>生产集群<======================");
+            log.debug("======================>生产集群<======================");
             connection = HbaseConnection.getInstance().getConnection();
-            log.info("======================>生产集群<======================");
+            log.debug("======================>生产集群<======================");
         } else if (SettingCache.TYPE.equals(SettingCache.SERVICE_TYPE)) {
-            log.info("======================>服务集群<======================");
+            log.debug("======================>服务集群<======================");
             connection = HbaseServiceConnection.getInstance().getConnection();
-            log.info("======================>服务集群<======================");
+            log.debug("======================>服务集群<======================");
         } else {
             log.error("设置集群参数有误：{}-不存在", SettingCache.TYPE);
         }
-        log.info("======================>获取Hbase连接  结束<======================");
+        log.debug("======================>获取Hbase连接  结束<======================");
         return connection;
     }
 
     private synchronized static HBaseAdmin getHBaseAdmin() {
         HBaseAdmin hBaseAdmin = null;
-        log.info("======================>获取HBaseAdmin  开始<======================");
+        log.debug("======================>获取HBaseAdmin  开始<======================");
         if (SettingCache.TYPE.equals(SettingCache.DEFAULT_TYPE)) {
             hBaseAdmin = HbaseConnection.getInstance().gethBaseAdmin();
-            log.info("======================>生产集群 hBaseAdmin<======================");
+            log.debug("======================>生产集群 hBaseAdmin<======================");
         } else if (SettingCache.TYPE.equals(SettingCache.SERVICE_TYPE)) {
             hBaseAdmin = HbaseServiceConnection.getInstance().gethBaseAdmin();
-            log.info("======================>服务集群 hBaseAdmin<======================");
+            log.debug("======================>服务集群 hBaseAdmin<======================");
         } else {
             log.error("设置集群参数有误：{}-不存在", SettingCache.TYPE);
         }
-        log.info("======================>获取HBaseAdmin  结束<======================");
+        log.debug("======================>获取HBaseAdmin  结束<======================");
         return hBaseAdmin;
     }
 
@@ -59,13 +59,13 @@ public class HBaseUtils {
     public static Boolean tableExists(String tableName) {
         boolean isExists;
         try {
-            log.info("=========================tableExists begin=========================");
-            log.info("=========================tableExists tableName-->" + tableName);
+            log.debug("=========================tableExists begin=========================");
+            log.debug("=========================tableExists tableName-->" + tableName);
             HBaseAdmin admin = getHBaseAdmin();
-            log.info("=========================tableExists admin-->" + admin);
+            log.debug("=========================tableExists admin-->" + admin);
             isExists = admin.tableExists(tableName);
-            log.info("=========================tableExists isExists-->" + isExists);
-            log.info("=========================tableExists end=========================");
+            log.debug("=========================tableExists isExists-->" + isExists);
+            log.debug("=========================tableExists end=========================");
         } catch (IOException e) {
             e.printStackTrace();
             log.error("判断表是否存在出错： \n" + e.getMessage(), e);
@@ -78,9 +78,9 @@ public class HBaseUtils {
     public static ResultScanner scanQuery(String startRowKey,
                                           String endRowKey,
                                           String tableName) throws Exception {
-        log.info("================scan query=================");
-        log.info("startRowKey=[" + startRowKey + "]");
-        log.info("endRowKey=[" + endRowKey + "]");
+        log.debug("================scan query=================");
+        log.debug("startRowKey=[" + startRowKey + "]");
+        log.debug("endRowKey=[" + endRowKey + "]");
         Table query = getConnection().getTable(TableName.valueOf(tableName));
         Scan scan = new Scan();
         scan.setStartRow(Bytes.toBytes(startRowKey));
@@ -96,22 +96,22 @@ public class HBaseUtils {
         List<String> result = new ArrayList<>(10);
 
         try {
-            log.info("================scan List=================");
-            log.info("startRowKey=[" + startRowKey + "]");
-            log.info("endRowKey=[" + endRowKey + "]");
-            log.info("================scanQueryList 获取客户群信息getTable  begin ================");
+            log.debug("================scan List=================");
+            log.debug("startRowKey=[" + startRowKey + "]");
+            log.debug("endRowKey=[" + endRowKey + "]");
+            log.debug("================scanQueryList 获取客户群信息getTable  begin ================");
             Table query = getConnection().getTable(TableName.valueOf(tableName));
-            log.info("================scanQueryList 获取客户群信息getTable  end ================");
+            log.debug("================scanQueryList 获取客户群信息getTable  end ================");
             Scan scan = new Scan();
             scan.setStartRow(Bytes.toBytes(startRowKey));
             scan.setStopRow(Bytes.toBytes(endRowKey));
             ResultScanner rs = query.getScanner(scan);
-            log.info("================scanQueryList 封装数据 begin ================");
+            log.debug("================scanQueryList 封装数据 begin ================");
             for (Result res : rs) {
-                log.info("================scanQueryList 数据->[" + Bytes.toString(res.getRow()) + "]");
+                log.debug("================scanQueryList 数据->[" + Bytes.toString(res.getRow()) + "]");
                 result.add(Bytes.toString(res.getRow()));
             }
-            log.info("================scanQueryList 封装数据 end ================");
+            log.debug("================scanQueryList 封装数据 end ================");
         } catch (IOException e) {
             e.printStackTrace();
             log.error("[scanQueryList]方法出错: " + e.getMessage(), e);
@@ -143,10 +143,10 @@ public class HBaseUtils {
         //Scan所有数据
         Scan scan = new Scan();
         scan.setStartRow(rowKey.getBytes());
-        log.info("startRow-->" + rowKey);
+        log.debug("startRow-->" + rowKey);
         String stopRowKey = rowKey + "g";
         scan.setStopRow(stopRowKey.getBytes());
-        log.info("stopRow-->" + stopRowKey);
+        log.debug("stopRow-->" + stopRowKey);
         return table.getScanner(scan);
     }
 }
