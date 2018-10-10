@@ -2,6 +2,8 @@ package com.asiainfo.tag.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -15,7 +17,9 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -166,5 +170,27 @@ public class HttpClientUtil {
         }
 
         return resultString;
+    }
+
+    public static String uniform(String url, String requestData, String charset) {
+        HttpPost httppost = new HttpPost(url);
+        StringEntity reqEntity = new StringEntity(requestData, charset);
+        httppost.setEntity(reqEntity);
+        HttpClient client = HttpClients.createDefault();
+        try {
+            CloseableHttpResponse response = (CloseableHttpResponse) client.execute(httppost);
+            InputStream is = response.getEntity().getContent();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            int i = -1;
+            while ((i = is.read()) != -1) {
+                baos.write(i);
+            }
+            return baos.toString(charset);
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

@@ -22,6 +22,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+        <thymeleaf.version>3.0.9.RELEASE</thymeleaf.version>
+        <thymeleaf-layout-dialect.version>2.0.4</thymeleaf-layout-dialect.version>
     </properties>
 
     <dependencies>
@@ -51,7 +53,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
+            <scope>true</scope>
             <optional>true</optional>
         </dependency>
 
@@ -134,9 +136,9 @@
         </dependency>
 
         <!--<dependency>-->
-            <!--<groupId>com.asiainfo</groupId>-->
-            <!--<artifactId>dacp-md5-encrypt</artifactId>-->
-            <!--<version>1.0</version>-->
+        <!--<groupId>com.asiainfo</groupId>-->
+        <!--<artifactId>dacp-md5-encrypt</artifactId>-->
+        <!--<version>1.0</version>-->
         <!--</dependency>-->
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -174,6 +176,16 @@
             <artifactId>cxf-spring-boot-starter-jaxws</artifactId>
             <version>3.2.5</version>
         </dependency>
+        <dependency>
+            <groupId>dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>1.6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>jaxen</groupId>
+            <artifactId>jaxen</artifactId>
+            <version>1.1.1</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -182,6 +194,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <fork>true</fork>
+                </configuration>
             </plugin>
         </plugins>
     </build>

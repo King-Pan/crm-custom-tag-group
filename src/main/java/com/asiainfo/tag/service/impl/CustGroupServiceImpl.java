@@ -64,7 +64,7 @@ public class CustGroupServiceImpl implements CustGroupService {
             }
         } catch (Exception e) {
             log.error("Hbase查询出错：" + e.getMessage(), e);
-            rt.put("retcode", "-2");
+            rt.put("retcode", "-3");
             log.error("查询集群:{}", SettingCache.TYPE);
             rt.put("errmsg", "Hbase查询出错：" + e.getMessage());
         }

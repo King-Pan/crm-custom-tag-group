@@ -78,6 +78,7 @@ public class HbaseServiceConnection {
             System.out.println("====================================");
         } catch (IOException e) {
             log.error("======================>初始化【服务集群】  异常->" + e.getMessage(), e);
+            throw new RuntimeException("======================>初始化【服务集群】  异常->" + e.getMessage());
         }
         log.error("======================>初始化【服务集群】  结束<======================");
     }

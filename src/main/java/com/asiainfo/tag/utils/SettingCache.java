@@ -22,7 +22,7 @@ public class SettingCache {
 
     public static String SWITCH_DATE = "";
 
-    public static String TYPE = "prod";
+    public static String TYPE = "service";
 
     public static boolean IS_AUTOSWITCH = true;
 

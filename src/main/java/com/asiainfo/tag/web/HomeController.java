@@ -39,6 +39,12 @@ public class HomeController {
         return new ModelAndView("home");
     }
 
+    @RequestMapping("/query")
+    public ModelAndView query() {
+        return new ModelAndView("query");
+    }
+
+
 
     @RequestMapping("/change")
     public Object changeInfo(@RequestParam("model") String model,

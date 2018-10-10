@@ -66,7 +66,7 @@ public class HBaseUtils {
             isExists = admin.tableExists(tableName);
             log.debug("=========================tableExists isExists-->" + isExists);
             log.debug("=========================tableExists end=========================");
-        } catch (IOException e) {
+        } catch (Throwable e) {
             e.printStackTrace();
             log.error("判断表是否存在出错： \n" + e.getMessage(), e);
             throw new RuntimeException("查询表是否存在出错: [" + tableName + "]");
@@ -112,7 +112,7 @@ public class HBaseUtils {
                 result.add(Bytes.toString(res.getRow()));
             }
             log.debug("================scanQueryList 封装数据 end ================");
-        } catch (IOException e) {
+        } catch (Throwable e) {
             e.printStackTrace();
             log.error("[scanQueryList]方法出错: " + e.getMessage(), e);
             throw new RuntimeException("查询数据列表【scanQueryList】出错");
@@ -129,7 +129,7 @@ public class HBaseUtils {
         } else {
             try {
                 connection.getAdmin();
-            } catch (IOException e) {
+            } catch (Throwable e) {
                 e.printStackTrace();
                 throw new RuntimeException(model + "获取连接失败");
             }

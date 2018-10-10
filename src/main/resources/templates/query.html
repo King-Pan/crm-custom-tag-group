@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link type="text/css" rel="stylesheet" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}"
+          href="webjars/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet"
+          href="webjars/bootstrap-datetimepicker/2.4.2/css/bootstrap-datetimepicker.min.css"
+          th:href="@{/webjars/bootstrap-datetimepicker/2.4.2/css/bootstrap-datetimepicker.min.css}"/>
+    <style>
+        .comments {
+            width: 100%; /*自动适应父布局宽度*/
+            overflow: auto;
+            word-break: break-all;
+            /*在ie中解决断行问题(防止自动变为在一行显示，主要解决ie兼容问题，
+            ie8中当设宽度为100%时，文本域类容超过一行时，当我们双击文本内容就会自动变为一行显示，
+            所以只能用ie的专有断行属性“word-break或word-wrap”控制其断行)*/
+        }
+    </style>
+</head>
+<body>
+<div id="app" style="margin: 20px;">
+    <div class="page-header">
+        <h1>客户群服务查询
+            <small>手动服务查询</small>
+        </h1>
+    </div>
+
+
+    <div class="panel panel-default">
+        <div class="panel-heading" style="font-weight: bold; background-color: #f5fafe; border-bottom: solid 1px #eee;">
+            客户群校验
+        </div>
+        <div class="panel-body">
+            <form class="form-horizontal" role="form" onsubmit="return false">
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label for="date" class="col-sm-1 control-label" style="text-align: right">用户号码</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" v-model="phoneNum1" style="width: 200px;">
+                    </div>
+                    <label for="date" class="col-sm-1 control-label">客户群</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" v-model="groupId" style="width: 200px;">
+                    </div>
+                    <div class="col-sm-4">
+                        <button class="btn btn-default" @click="checkGroup">
+                            <span class="glyphicon glyphicon-search"></span>查询
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label for="date" class="col-sm-1 control-label">结果</label>
+                    <div class="col-sm-8">
+                        <textarea class="form-control comments" v-model="msg" rows="4" disabled></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading"  style="font-weight: bold; background-color: #f5fafe; border-bottom: solid 1px #eee;">号码客户群查询</div>
+        <div class="panel-body">
+            <form class="form-horizontal" onsubmit="return false" role="form">
+                <div class="form-group">
+                    <label for="date" class="col-sm-1 control-label" style="text-align: right">用户号码</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" v-model="phoneNum2" style="width: 200px;">
+                    </div>
+                    <div class="col-sm-4">
+                        <button class="btn btn-default" @click="getList">
+                            <span class="glyphicon glyphicon-search"></span>查询
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="container">
+                        <table class="table table-bordered table-condensed">
+                            <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>手机号码</th>
+                                <th>客户群号</th>
+                            </tr>
+                            </thead>
+                            <tbody v-if="dataList.length">
+                            <tr v-for="data in dataList">
+                                <td>
+                                    {{data.id}}
+                                </td>
+                                <td>
+                                    {{data.telNum}}
+                                </td>
+                                <td>
+                                    {{data.groupId}}
+                                </td>
+                            </tr>
+
+                            </tbody>
+                            <tbody v-else>
+                            <tr style="text-align: center">
+                                <td colspan="3" style="text-align: center;color: red">没有数据-->{{errorMsg}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="webjars/vue/2.5.16/dist/vue.min.js"
+        th:src="@{/webjars/vue/2.5.16/dist/vue.min.js}"></script>
+<script type="text/javascript" src="webjars/jquery/1.11.1/jquery.min.js"
+        th:src="@{/webjars/jquery/1.11.1/jquery.min.js}"></script>
+<script type="text/javascript" src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"
+        th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+<script type="text/javascript" src="webjars/bootstrap-datetimepicker/2.4.2/js/bootstrap-datetimepicker.min.js"
+        th:src="@{/webjars/bootstrap-datetimepicker/2.4.2/js/bootstrap-datetimepicker.min.js}"></script>
+<script type="text/javascript" src="webjars/bootstrap-datetimepicker/2.4.2/js/locales/bootstrap-datetimepicker.zh-CN.js"
+        th:src="@{/webjars/bootstrap-datetimepicker/2.4.2/js/locales/bootstrap-datetimepicker.zh-CN.js}"></script>
+
+
+<script>
+    Date.prototype.format = function (format) {
+        var o = {
+            "M+": this.getMonth() + 1, //month
+            "d+": this.getDate(),    //day
+            "h+": this.getHours(),   //hour
+            "m+": this.getMinutes(), //minute
+            "s+": this.getSeconds(), //second
+            "q+": Math.floor((this.getMonth() + 3) / 3),  //quarter
+            "S": this.getMilliseconds() //millisecond
+        }
+        if (/(y+)/.test(format)) format = format.replace(RegExp.$1,
+            (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o) if (new RegExp("(" + k + ")").test(format))
+            format = format.replace(RegExp.$1,
+                RegExp.$1.length == 1 ? o[k] :
+                    ("00" + o[k]).substr(("" + o[k]).length));
+        return format;
+    }
+    $(function () {
+        $("#date").datetimepicker({
+            format: "yyyymmdd",
+            language: 'zh-CN',
+            autoclose: true,
+            todayBtn: true,
+            minuteStep: 10,
+            startView: 2,
+            minView: 2,
+            clearBtn: true //清除按钮
+        }).on('changeDate', function (ev) {
+            var time = new Date(ev.date.valueOf());
+            var date = time.format('yyyyMMdd');
+            console.log(date);
+            vm.$data.date = date;
+        });
+    });
+
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            groupId: '',
+            phoneNum1: '',
+            phoneNum2: '',
+            msg: '',
+            errorMsg: '',
+            dataList: []
+        },
+        methods: {
+            checkGroup: function () {
+                var dt = {};
+                var telnum = this.$data.phoneNum1;
+                if (!telnum) {
+                    alert("客户群校验->【用户号码】不能为空");
+                    return;
+                }
+                dt.telnum = telnum;
+                var custgroupid = this.$data.groupId;
+                if (!custgroupid) {
+                    alert("客户群校验->【客户群】不能为空");
+                    return;
+                }
+                dt.custgroupid = custgroupid;
+                $.ajax({
+                    type: 'post',
+                    url: 'checkNum',
+                    data: dt,
+                    success: function (data) {
+                        if (data) {
+                            vm.$data.msg = data;
+                        }
+                    }
+                });
+                console.log("电话号码：" + this.$data.phoneNum1 + ",客户群号码：" + this.$data.groupId);
+            },
+            getList: function () {
+                var telnum = this.$data.phoneNum2;
+                if (!telnum) {
+                    alert("号码客户群查询->【用户号码】不能为空");
+                    return;
+                }
+                var dt = {};
+                dt.telnum = telnum;
+                $.ajax({
+                    type: 'post',
+                    url: 'list',
+                    data: dt,
+                    success: function (data) {
+                        if (data.status === 200) {
+                            vm.$data.dataList = data.datas;
+                        } else {
+                            vm.$data.errorMsg = data.errmsg;
+                        }
+                    }
+                });
+                console.log("电话号码：" + this.$data.phoneNum2);
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

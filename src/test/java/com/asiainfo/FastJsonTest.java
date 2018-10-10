@@ -1,6 +1,7 @@
 package com.asiainfo;
 
 import com.asiainfo.tag.utils.FastJsonUtils;
+import com.asiainfo.tag.utils.MD5RowKeyGenerator;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -22,5 +23,11 @@ public class FastJsonTest {
         rt.put("retcode", "-2");
         rt.put("errmsg", "检查号码：[]是否在客户群中失败: ");
         System.out.println(FastJsonUtils.getBeanToJson(rt));
+    }
+
+    @Test
+    public void test2(){
+        MD5RowKeyGenerator md5RowKeyGenerator = new MD5RowKeyGenerator();
+        System.out.println(md5RowKeyGenerator.generatePrefix("13098445304"));
     }
 }
