@@ -23,35 +23,35 @@ public class HBaseUtils {
 
     private synchronized static Connection getConnection() {
         Connection connection = null;
-        log.debug("======================>获取Hbase连接  开始<======================");
+        log.info("======================>获取Hbase连接  开始<======================");
         if (SettingCache.TYPE.equals(SettingCache.DEFAULT_TYPE)) {
-            log.debug("======================>生产集群<======================");
+            log.info("======================>生产集群<======================");
             connection = HbaseConnection.getInstance().getConnection();
-            log.debug("======================>生产集群<======================");
+            log.info("======================>生产集群<======================");
         } else if (SettingCache.TYPE.equals(SettingCache.SERVICE_TYPE)) {
-            log.debug("======================>服务集群<======================");
+            log.info("======================>服务集群<======================");
             connection = HbaseServiceConnection.getInstance().getConnection();
-            log.debug("======================>服务集群<======================");
+            log.info("======================>服务集群<======================");
         } else {
             log.error("设置集群参数有误：{}-不存在", SettingCache.TYPE);
         }
-        log.debug("======================>获取Hbase连接  结束<======================");
+        log.info("======================>获取Hbase连接  结束<======================");
         return connection;
     }
 
     private synchronized static HBaseAdmin getHBaseAdmin() {
         HBaseAdmin hBaseAdmin = null;
-        log.debug("======================>获取HBaseAdmin  开始<======================");
+        log.info("======================>获取HBaseAdmin  开始<======================");
         if (SettingCache.TYPE.equals(SettingCache.DEFAULT_TYPE)) {
             hBaseAdmin = HbaseConnection.getInstance().gethBaseAdmin();
-            log.debug("======================>生产集群 hBaseAdmin<======================");
+            log.info("======================>生产集群 hBaseAdmin<======================");
         } else if (SettingCache.TYPE.equals(SettingCache.SERVICE_TYPE)) {
             hBaseAdmin = HbaseServiceConnection.getInstance().gethBaseAdmin();
-            log.debug("======================>服务集群 hBaseAdmin<======================");
+            log.info("======================>服务集群 hBaseAdmin<======================");
         } else {
             log.error("设置集群参数有误：{}-不存在", SettingCache.TYPE);
         }
-        log.debug("======================>获取HBaseAdmin  结束<======================");
+        log.info("======================>获取HBaseAdmin  结束<======================");
         return hBaseAdmin;
     }
 
@@ -60,11 +60,10 @@ public class HBaseUtils {
         boolean isExists;
         try {
             log.debug("=========================tableExists begin=========================");
-            log.debug("=========================tableExists tableName-->" + tableName);
+            log.info("=========================tableExists tableName-->" + tableName);
             HBaseAdmin admin = getHBaseAdmin();
-            log.debug("=========================tableExists admin-->" + admin);
             isExists = admin.tableExists(tableName);
-            log.debug("=========================tableExists isExists-->" + isExists);
+            log.info("=========================tableExists isExists-->" + isExists);
             log.debug("=========================tableExists end=========================");
         } catch (Throwable e) {
             e.printStackTrace();
