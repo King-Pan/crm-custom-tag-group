@@ -70,11 +70,6 @@ public class CustGroupServiceImpl implements CustGroupService {
         }
 
         String resultInfo = JSONObject.toJSONString(rt);
-        log.info("电话号码: " + telno);
-        log.info("客户群组ID: " + groupid);
-        log.info("查询表名: " + tableName);
-        log.info("查询的集群: " + SettingCache.TYPE);
-        log.info("返回结果是：" + resultInfo);
         log.info("--------------查询号码是否在某个客户群组中 checkTagInGroup end--------------");
         return resultInfo;
     }
@@ -117,10 +112,6 @@ public class CustGroupServiceImpl implements CustGroupService {
         }
 
         String resultInfo = JSONObject.toJSONString(rt);
-        log.info("电话号码: " + telno);
-        log.info("查询表名: " + tableName);
-        log.info("查询的集群: " + SettingCache.TYPE);
-        log.info("返回结果是：" + resultInfo);
         log.info("---------查询客户群组信息 getUserTagGroupList end----------");
         return resultInfo;
     }

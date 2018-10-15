@@ -74,47 +74,38 @@ public class HBaseUtils {
     }
 
 
-    public static ResultScanner scanQuery(String startRowKey,
-                                          String endRowKey,
-                                          String tableName) throws Exception {
-        log.debug("================scan query=================");
-        log.debug("startRowKey=[" + startRowKey + "]");
-        log.debug("endRowKey=[" + endRowKey + "]");
-        Table query = getConnection().getTable(TableName.valueOf(tableName));
-        Scan scan = new Scan();
-        scan.setStartRow(Bytes.toBytes(startRowKey));
-        scan.setStopRow(Bytes.toBytes(endRowKey));
-        ResultScanner rs = query.getScanner(scan);
-        return rs;
-    }
-
 
     public static List<String> scanQueryList(String startRowKey,
                                              String endRowKey,
                                              String tableName) {
         List<String> result = new ArrayList<>(10);
-
+        ResultScanner rs = null;
         try {
-            log.debug("================scan List=================");
-            log.debug("startRowKey=[" + startRowKey + "]");
-            log.debug("endRowKey=[" + endRowKey + "]");
-            log.debug("================scanQueryList 获取客户群信息getTable  begin ================");
+            log.info("================scan List=================");
+            log.info("startRowKey=[" + startRowKey + "]");
+            log.info("endRowKey=[" + endRowKey + "]");
+            log.info("================scanQueryList 获取客户群信息getTable  begin ================");
             Table query = getConnection().getTable(TableName.valueOf(tableName));
-            log.debug("================scanQueryList 获取客户群信息getTable  end ================");
+            log.info("================scanQueryList 获取客户群信息getTable  end ================");
             Scan scan = new Scan();
             scan.setStartRow(Bytes.toBytes(startRowKey));
             scan.setStopRow(Bytes.toBytes(endRowKey));
-            ResultScanner rs = query.getScanner(scan);
-            log.debug("================scanQueryList 封装数据 begin ================");
+            rs = query.getScanner(scan);
+            log.info("================scanQueryList 封装数据 begin ================");
             for (Result res : rs) {
                 log.debug("================scanQueryList 数据->[" + Bytes.toString(res.getRow()) + "]");
                 result.add(Bytes.toString(res.getRow()));
             }
-            log.debug("================scanQueryList 封装数据 end ================");
+            log.info("================scanQueryList 封装数据 end ================");
         } catch (Throwable e) {
             e.printStackTrace();
             log.error("[scanQueryList]方法出错: " + e.getMessage(), e);
-            throw new RuntimeException("查询数据列表【scanQueryList】出错");
+            throw new RuntimeException("查询数据列表【scanQueryList】出错", e);
+        }
+        finally {
+            if(rs!=null){
+                rs.close();
+            }
         }
         return result;
     }
@@ -134,18 +125,5 @@ public class HBaseUtils {
             }
         }
         return connection;
-    }
-
-
-    public static ResultScanner getSimpleRowByScan(String tableName, String rowKey) throws Exception {
-        Table table = getConnection().getTable(TableName.valueOf(tableName));
-        //Scan所有数据
-        Scan scan = new Scan();
-        scan.setStartRow(rowKey.getBytes());
-        log.debug("startRow-->" + rowKey);
-        String stopRowKey = rowKey + "g";
-        scan.setStopRow(stopRowKey.getBytes());
-        log.debug("stopRow-->" + stopRowKey);
-        return table.getScanner(scan);
     }
 }

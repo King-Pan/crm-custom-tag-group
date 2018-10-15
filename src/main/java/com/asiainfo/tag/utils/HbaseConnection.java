@@ -47,7 +47,8 @@ public class HbaseConnection {
         config.set("hbase.zookeeper.quorum", hbaseInfo.getQuorum());
         // 客户端端口号
         config.set("hbase.zookeeper.property.clientPort", hbaseInfo.getClientPort());
-        config.set("fs.defaultFS", "hdfs://hbcm");
+        //config.set("hbase.client.ipc.pool.type", "RoundRobin");
+        config.set("hbase.client.ipc.pool.size", hbaseInfo.getPoolSize());
         log.error("======================>初始化【生产集群】  参数: hbase.zookeeper.quorum->{}", hbaseInfo.getQuorum());
         log.error("======================>初始化【生产集群】  参数: hbase.zookeeper.property.clientPort->{}", hbaseInfo.getClientPort());
         try {

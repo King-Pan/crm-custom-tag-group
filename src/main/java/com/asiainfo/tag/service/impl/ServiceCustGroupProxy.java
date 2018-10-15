@@ -89,6 +89,8 @@ public class ServiceCustGroupProxy implements CustGroupService {
             object.put("errmsg", jsonObject.getString("errmsg"));
             result = FastJsonUtils.getBeanToJson(object);
         }
+        log.info("查询的集群: " + SettingCache.TYPE);
+        log.info("返回结果是：" + result);
         return result;
     }
 }

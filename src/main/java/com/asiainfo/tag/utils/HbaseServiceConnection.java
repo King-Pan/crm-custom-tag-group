@@ -54,11 +54,11 @@ public class HbaseServiceConnection {
         config.set("hadoop.security.authentication", "kerberos");
         config.set("hbase.security.authentication", "kerberos");
         config.set("kerberos.principal", hbaseInfo.getPrincipal());
-        //config.set("hbase.master.kerberos.principal", hbaseInfo.getPrincipal());
-        //config.set("hbase.regionserver.kerberos.principal", hbaseInfo.getPrincipal());
         config.set("keytab.file", hbaseInfo.getKeytabFile());
         config.set("hbase.zookeeper.quorum", hosts);
         config.set("hbase.zookeeper.property.clientPort", port);
+        //config.set("hbase.client.ipc.pool.type", "RoundRobin");
+        config.set("hbase.client.ipc.pool.size", hbaseInfo.getPoolSize());
         config.addResource("hbase-resource/core-site.xml");
         config.addResource("hbase-resource/hbase-site.xml");
         config.addResource("hbase-resource/hdfs-site.xml");

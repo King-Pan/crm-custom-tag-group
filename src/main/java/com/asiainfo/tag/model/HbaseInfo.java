@@ -61,4 +61,7 @@ public class HbaseInfo {
     @Value("${kerberos.principal}")
     private String principal;
 
+    @Value("${hbase.client.ipc.pool.size}")
+    private String poolSize;
+
 }
