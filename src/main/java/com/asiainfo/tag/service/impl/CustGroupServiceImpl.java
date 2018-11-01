@@ -35,7 +35,6 @@ public class CustGroupServiceImpl implements CustGroupService {
 
     @Override
     public String checkTagInGroup(String jsonParma) {
-        log.info("--------------查询号码是否在某个客户群组中 checkTagInGroup begin--------------");
         log.info("checkTagInGroup params:" + jsonParma);
         JSONObject js = JSONObject.parseObject(jsonParma);
         String telno = js.getString("telnum");
@@ -49,6 +48,7 @@ public class CustGroupServiceImpl implements CustGroupService {
                 String enKey = md5RowKeyGenerator.generatePrefix(telno) + telno + "|" + groupid.substring(0, 6) + groupId;
                 log.info("查询客户群是否存在startRow:" + rowKey);
                 log.info("查询客户群是否存在endRow:" + enKey);
+                long startTime = System.currentTimeMillis();
                 if (HBaseUtils.scanQueryList(rowKey, enKey, tableName).size() > 0) {
                     rt.put("retcode", "0");
                     rt.put("errmsg", "数据存在");
@@ -58,6 +58,8 @@ public class CustGroupServiceImpl implements CustGroupService {
                     rt.put("errmsg", "数据不存在");
                     rt.put("telstatus", "-1");
                 }
+                long endTime = System.currentTimeMillis();
+                log.warn("查询号码{}，是否在客户群:{}内，共耗时:{}毫秒", telno, groupid, (endTime - startTime));
             } else {
                 rt.put("retcode", "-2");
                 rt.put("errmsg", "表" + tableName + "未生成");
@@ -76,13 +78,13 @@ public class CustGroupServiceImpl implements CustGroupService {
 
     @Override
     public String getUserTagGroupList(String jsonParma) {
-        log.info("---------查询客户群组信息 getUserTagGroupList begin----------");
         log.info("getUserTagGroupList 查询参数:" + jsonParma);
         JSONObject js = JSONObject.parseObject(jsonParma);
         String telno = js.getString("telnum");
         String tableName = getTableName();
         Map<String, Object> rt = new HashMap<>(20);
         try {
+            long startTime = System.currentTimeMillis();
             if (HBaseUtils.tableExists(tableName)) {
                 //13477343118 - 开始行： oc513477343118
                 String rowKey = md5RowKeyGenerator.generatePrefix(telno) + telno;
@@ -104,6 +106,8 @@ public class CustGroupServiceImpl implements CustGroupService {
                 rt.put("retcode", "-2");
                 rt.put("errmsg", "表" + tableName + "未生成");
             }
+            long endTime = System.currentTimeMillis();
+            log.warn("查询号码{}所有客户群，共耗时:{}毫秒", telno, (endTime - startTime));
         } catch (Exception e) {
             log.error("Hbase查询出错：" + e.getMessage(), e);
             rt.put("retcode", "-3");
