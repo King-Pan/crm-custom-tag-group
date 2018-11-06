@@ -8,8 +8,6 @@ import com.asiainfo.tag.utils.MD5RowKeyGenerator;
 import com.asiainfo.tag.utils.SettingCache;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -45,7 +43,10 @@ public class CustGroupServiceImpl implements CustGroupService {
             if (HBaseUtils.tableExists(tableName)) {
                 String rowKey = md5RowKeyGenerator.generatePrefix(telno) + telno + "|" + groupid;
                 String groupId = String.format("%08d", Long.valueOf(groupid.substring(6, groupid.length())) + 1);
-                String enKey = md5RowKeyGenerator.generatePrefix(telno) + telno + "|" + groupid.substring(0, 6) + groupId;
+                StringBuilder sb = new StringBuilder();
+                sb.append(md5RowKeyGenerator.generatePrefix(telno)).append(telno).append("|");
+                sb.append(groupid.substring(0, 6)).append(groupId);
+                String enKey = sb.toString();
                 log.info("查询客户群是否存在startRow:" + rowKey);
                 log.info("查询客户群是否存在endRow:" + enKey);
                 long startTime = System.currentTimeMillis();

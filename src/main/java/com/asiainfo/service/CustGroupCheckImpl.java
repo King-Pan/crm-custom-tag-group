@@ -2,6 +2,7 @@ package com.asiainfo.service;
 
 
 import com.asiainfo.tag.service.CustGroupService;
+import com.asiainfo.tag.utils.SettingCache;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -30,6 +31,7 @@ public class CustGroupCheckImpl implements CustGroupCheck {
         String result = custGroupService.checkTagInGroup(jsonParam);
         long endTime = System.currentTimeMillis();
         log.info("查询某号码是否在客户群内,返回结果: " + result);
+        log.info("集群信息:" + SettingCache.TYPE);
         log.info("查询某号码是否在客户群内共耗时: " + (endTime - startTime));
         return result;
     }
@@ -39,8 +41,9 @@ public class CustGroupCheckImpl implements CustGroupCheck {
         log.info("查询某号码所有客户群-->参数: [" + jsonParam + "]");
         long startTime = System.currentTimeMillis();
         String result = custGroupService.getUserTagGroupList(jsonParam);
-        log.info("查询某号码所有客户群 返回结果:{}", result);
         long endTime = System.currentTimeMillis();
+        log.info("查询某号码所有客户群 返回结果:{}", result);
+        log.info("集群信息:" + SettingCache.TYPE);
         log.info("查询某号码所有客户群共耗时: " + (endTime - startTime));
         return result;
     }

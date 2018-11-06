@@ -29,13 +29,12 @@ public class ServiceCustGroupProxy implements CustGroupService {
     public String checkTagInGroup(String jsonParma) {
         String result = custGroupService.checkTagInGroup(jsonParma);
         if (SettingCache.IS_AUTOSWITCH) {
-            log.warn("================checkTagInGroup 自动集群切换================");
             JSONObject jsonObject = JSONObject.parseObject(result);
             if (jsonObject.getString("retcode").equals("-3")) {
                 if (SettingCache.TYPE.equals(SettingCache.PROD_TYPE)) {
                     SettingCache.TYPE = SettingCache.SERVICE_TYPE;
                     log.warn("================checkTagInGroup 切换前集群: 生产集群，切换后集群: 服务集群================");
-                }else if (SettingCache.TYPE.equals(SettingCache.SERVICE_TYPE)) {
+                } else if (SettingCache.TYPE.equals(SettingCache.SERVICE_TYPE)) {
                     SettingCache.TYPE = SettingCache.PROD_TYPE;
                     log.warn("================checkTagInGroup 切换前集群: 服务集群，切换后集群: 生产集群================");
                 }
@@ -43,16 +42,6 @@ public class ServiceCustGroupProxy implements CustGroupService {
             }
         } else {
             log.info("================checkTagInGroup 手动集群切换================");
-
-        }
-        log.info("================checkTagInGroup 方法结束================");
-        JSONObject jsonObject = FastJsonUtils.getJsonObject(result);
-        String retcode = jsonObject.getString("retcode");
-        if ("-3".equals(retcode)) {
-            JSONObject object = new JSONObject();
-            object.put("errmsg", jsonObject.getString("errmsg"));
-            object.put("retcode", "-2");
-            result = FastJsonUtils.getBeanToJson(object);
         }
         return getResult(result);
     }
@@ -61,22 +50,20 @@ public class ServiceCustGroupProxy implements CustGroupService {
     public String getUserTagGroupList(String jsonParma) {
         String result = custGroupService.getUserTagGroupList(jsonParma);
         if (SettingCache.IS_AUTOSWITCH) {
-            log.warn("================getUserTagGroupList 自动集群切换================");
             JSONObject jsonObject = JSONObject.parseObject(result);
             if (jsonObject.getString("retcode").equals("-3")) {
                 if (SettingCache.TYPE.equals(SettingCache.PROD_TYPE)) {
                     SettingCache.TYPE = SettingCache.SERVICE_TYPE;
-                    log.warn("================getUserTagGroupList 切换前集群: 生产集群，切换后集群: 服务集群================");
-                }else if(SettingCache.TYPE.equals(SettingCache.SERVICE_TYPE)) {
+                    log.error("================getUserTagGroupList 切换前集群: 生产集群，切换后集群: 服务集群================");
+                } else if (SettingCache.TYPE.equals(SettingCache.SERVICE_TYPE)) {
                     SettingCache.TYPE = SettingCache.PROD_TYPE;
-                    log.warn("================getUserTagGroupList 切换前集群: 服务集群，切换后集群: 生产集群================");
+                    log.error("================getUserTagGroupList 切换前集群: 服务集群，切换后集群: 生产集群================");
                 }
                 result = custGroupService.getUserTagGroupList(jsonParma);
             }
         } else {
             log.info("================getUserTagGroupList 手动集群切换================");
         }
-        log.info("================getUserTagGroupList 方法结束================");
         return getResult(result);
     }
 
@@ -89,8 +76,6 @@ public class ServiceCustGroupProxy implements CustGroupService {
             object.put("errmsg", jsonObject.getString("errmsg"));
             result = FastJsonUtils.getBeanToJson(object);
         }
-        log.info("查询的集群: " + SettingCache.TYPE);
-        log.info("返回结果是：" + result);
         return result;
     }
 }
