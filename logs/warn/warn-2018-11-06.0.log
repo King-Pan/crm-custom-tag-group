@@ -1,0 +1,6 @@
+2018-11-06 10:13:46.186 WARN  org.thymeleaf.templatemode.TemplateMode Line:150 - [THYMELEAF][restartedMain] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+2018-11-06 10:19:10.464 WARN  org.thymeleaf.templatemode.TemplateMode Line:150 - [THYMELEAF][restartedMain] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+2018-11-06 10:39:49.302 WARN  org.springframework.beans.factory.support.DisposableBeanAdapter Line:281 - Invocation of destroy method failed on bean with name 'classPathFileSystemWatcher': java.lang.NullPointerException
+2018-11-06 10:39:52.583 WARN  org.thymeleaf.templatemode.TemplateMode Line:150 - [THYMELEAF][restartedMain] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+2018-11-06 10:45:19.146 WARN  org.springframework.beans.factory.support.DisposableBeanAdapter Line:281 - Invocation of destroy method failed on bean with name 'classPathFileSystemWatcher': java.lang.NullPointerException
+2018-11-06 10:45:22.173 WARN  org.thymeleaf.templatemode.TemplateMode Line:150 - [THYMELEAF][restartedMain] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.

@@ -137,7 +137,7 @@
     var vm = new Vue({
         el: '#app',
         data: {
-            type: 'proxy',
+            type: 'service',
             date: '',
             model: '自动'
         },
@@ -173,7 +173,7 @@
                 if (model === 'auto') {
                     this.model = '自动';
                     this.date = '';
-                    this.type = 'proxy';
+                    this.type = 'service';
                 } else {
                     this.model = '手动';
                 }
@@ -186,7 +186,7 @@
                         if (data.status == "200") {
                             alert("切换成功");
                         } else {
-                            alert("切换成功");
+                            alert("切换失败");
                         }
                     }
                 });
