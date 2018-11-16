@@ -1,1 +1,3 @@
-2018-11-15 20:19:55.569 WARN  org.thymeleaf.templatemode.TemplateMode Line:150 - [THYMELEAF][restartedMain] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+2018-11-16 16:48:33.763 WARN  org.thymeleaf.templatemode.TemplateMode Line:150 - [THYMELEAF][restartedMain] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+2018-11-16 17:51:25.952 WARN  org.thymeleaf.templatemode.TemplateMode Line:150 - [THYMELEAF][restartedMain] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+2018-11-16 17:56:33.977 WARN  org.thymeleaf.templatemode.TemplateMode Line:150 - [THYMELEAF][restartedMain] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
