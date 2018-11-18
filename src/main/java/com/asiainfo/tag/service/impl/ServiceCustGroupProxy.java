@@ -33,15 +33,15 @@ public class ServiceCustGroupProxy implements CustGroupService {
             if (jsonObject.getString("retcode").equals("-3")) {
                 if (SettingCache.TYPE.equals(SettingCache.PROD_TYPE)) {
                     SettingCache.TYPE = SettingCache.SERVICE_TYPE;
-                    log.warn("================checkTagInGroup 切换前集群: 生产集群，切换后集群: 服务集群================");
+                    log.error("================checkTagInGroup 切换前集群: 生产集群，切换后集群: 服务集群================");
                 } else if (SettingCache.TYPE.equals(SettingCache.SERVICE_TYPE)) {
                     SettingCache.TYPE = SettingCache.PROD_TYPE;
-                    log.warn("================checkTagInGroup 切换前集群: 服务集群，切换后集群: 生产集群================");
+                    log.error("================checkTagInGroup 切换前集群: 服务集群，切换后集群: 生产集群================");
                 }
                 result = custGroupService.checkTagInGroup(jsonParma);
             }
         } else {
-            log.info("================checkTagInGroup 手动集群切换================");
+            log.error("================checkTagInGroup 手动集群切换，出错不自动切换================");
         }
         return getResult(result);
     }
@@ -52,6 +52,7 @@ public class ServiceCustGroupProxy implements CustGroupService {
         if (SettingCache.IS_AUTOSWITCH) {
             JSONObject jsonObject = JSONObject.parseObject(result);
             if (jsonObject.getString("retcode").equals("-3")) {
+                log.error(jsonObject.getString("errmsg"));
                 if (SettingCache.TYPE.equals(SettingCache.PROD_TYPE)) {
                     SettingCache.TYPE = SettingCache.SERVICE_TYPE;
                     log.error("================getUserTagGroupList 切换前集群: 生产集群，切换后集群: 服务集群================");
@@ -62,7 +63,7 @@ public class ServiceCustGroupProxy implements CustGroupService {
                 result = custGroupService.getUserTagGroupList(jsonParma);
             }
         } else {
-            log.info("================getUserTagGroupList 手动集群切换================");
+            log.error("================checkTagInGroup 手动集群切换，出错不自动切换================");
         }
         return getResult(result);
     }

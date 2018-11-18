@@ -23,7 +23,7 @@ public class HBaseUtils {
 
     private synchronized static Connection getConnection() {
         Connection connection = null;
-        if (SettingCache.TYPE.equals(SettingCache.DEFAULT_TYPE)) {
+        if (SettingCache.TYPE.equals(SettingCache.PROD_TYPE)) {
             connection = HbaseConnection.getInstance().getConnection();
         } else if (SettingCache.TYPE.equals(SettingCache.SERVICE_TYPE)) {
             connection = HbaseServiceConnection.getInstance().getConnection();
