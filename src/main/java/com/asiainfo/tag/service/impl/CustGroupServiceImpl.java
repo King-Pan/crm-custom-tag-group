@@ -39,7 +39,7 @@ public class CustGroupServiceImpl implements CustGroupService {
         String groupid = js.getString("custgroupid");
         String tableName = getTableName();
         Map<String, String> rt = new HashMap<>(20);
-        log.warn("===============checkTagInGroup  本次查询的表为: tableName");
+        log.warn("===============checkTagInGroup  本次查询的表为: " + tableName);
         try {
             if (HBaseUtils.tableExists(tableName)) {
                 String rowKey = md5RowKeyGenerator.generatePrefix(telno) + telno + "|" + groupid;
@@ -87,7 +87,7 @@ public class CustGroupServiceImpl implements CustGroupService {
         String telno = js.getString("telnum");
         String tableName = getTableName();
         Map<String, Object> rt = new HashMap<>(20);
-        log.warn("===============getUserTagGroupList 本次查询的表为: tableName");
+        log.warn("===============getUserTagGroupList 本次查询的表为: " + tableName);
         try {
             long startTime = System.currentTimeMillis();
             if (HBaseUtils.tableExists(tableName)) {
