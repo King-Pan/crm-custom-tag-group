@@ -35,13 +35,22 @@ public class HBaseUtils {
 
     public static Boolean tableExists(String tableName) {
         boolean isExists;
+        Admin admin = null;
         try {
-            Admin admin = getConnection().getAdmin();
+            admin = getConnection().getAdmin();
             isExists = admin.tableExists(TableName.valueOf(tableName));
         } catch (Throwable e) {
             e.printStackTrace();
             log.error("判断表是否存在出错： \n" + e.getMessage(), e);
             throw new RuntimeException("查询表是否存在出错: [" + tableName + "]");
+        }finally {
+            if(admin!=null){
+                try {
+                    admin.close();
+                } catch (IOException e) {
+                    log.error("关闭HbaseAdmin失败",e);
+                }
+            }
         }
         return isExists;
     }
