@@ -73,7 +73,6 @@ public class HttpClientUtil {
                 throw new RuntimeException("请求失败：状态码:" + response.getStatusLine().getStatusCode() + "地址=" + url + ",参数=" + param);
             }
         } catch (Exception e) {
-            e.printStackTrace();
             log.error("同步失败：请求地址=" + url + ",参数=" + param);
             throw new RuntimeException("请求失败：地址=" + url + ",参数=" + param);
         } finally {
@@ -83,7 +82,7 @@ public class HttpClientUtil {
                 }
                 httpclient.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("关闭HttpClient失败", e);
             }
         }
         return resultString;
@@ -122,12 +121,12 @@ public class HttpClientUtil {
             response = httpClient.execute(httpPost);
             resultString = EntityUtils.toString(response.getEntity(), "utf-8");
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("HttpClient post请求失败", e);
         } finally {
             try {
                 response.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("关闭HttpClient失败", e);
             }
         }
 
@@ -160,12 +159,12 @@ public class HttpClientUtil {
             response = httpClient.execute(httpPost);
             resultString = EntityUtils.toString(response.getEntity(), "utf-8");
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("doPostJson 方法失败 url:" + url + ",json:" + json, e);
         } finally {
             try {
                 response.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("关闭HttpClient失败", e);
             }
         }
 
@@ -186,10 +185,8 @@ public class HttpClientUtil {
                 baos.write(i);
             }
             return baos.toString(charset);
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            log.error("uniform失败", e);
         }
         return null;
     }

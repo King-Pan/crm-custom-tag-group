@@ -184,7 +184,8 @@
     </appender>
 
     <springProfile name="prod">
-        <root level="warn">
+        <root level="info">
+            <appender-ref ref="FILEINFO"/>
             <appender-ref ref="FILEWARN"/>
             <appender-ref ref="FILEERROR"/>
         </root>

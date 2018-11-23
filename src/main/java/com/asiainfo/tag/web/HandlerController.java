@@ -82,7 +82,7 @@ public class HandlerController {
             }
             log.info("========> 手动测试cxf {}", result);
         } catch (Throwable e) {
-            e.printStackTrace();
+            log.error("checkExistsNo方法调用出错", e);
         }
         return result;
     }
@@ -139,7 +139,7 @@ public class HandlerController {
             }
             log.info("========> 手动测试cxf {}", result);
         } catch (Throwable e) {
-            e.printStackTrace();
+            log.error("getCustGroupList方法调用出错", e);
         }
         return result;
     }

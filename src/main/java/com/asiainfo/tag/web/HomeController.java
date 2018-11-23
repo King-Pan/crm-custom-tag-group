@@ -80,7 +80,7 @@ public class HomeController {
                     if (StringUtils.isNoneBlank(type)) {
                         TYPE = type;
                     } else {
-                        throw new RuntimeException("服务类型不能为空");
+                        throw new RuntimeException("集群类型不能为空");
                     }
                     if (StringUtils.isNoneBlank(date)) {
                         SWITCH_DATE = date;

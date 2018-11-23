@@ -1,5 +1,6 @@
 package com.asiainfo.tag.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.Connection;
@@ -16,6 +17,7 @@ import java.io.IOException;
  * Time: 上午10:06
  * Description: No Description
  */
+@Slf4j
 public class HbaseProxyConnection {
     private Configuration config;
     private Connection connection;
@@ -47,7 +49,7 @@ public class HbaseProxyConnection {
             connection = ConnectionFactory.createConnection(config);
             hBaseAdmin = new HBaseAdmin(connection);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("初始化【代理集群】连接失败",e);
         }
     }
 

@@ -1,5 +1,6 @@
 package com.asiainfo.tag.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -17,6 +18,7 @@ import java.io.StringReader;
  * Time: 上午10:57
  * Description: No Description
  */
+@Slf4j
 public class Dom4jUtil {
     /**
      * 通过xml字符获取document文档
@@ -46,7 +48,7 @@ public class Dom4jUtil {
         try {
             document = saxReader.read(sr);
         } catch (DocumentException e) {
-            e.printStackTrace();
+            log.error("解析xml字符串失败 xml=" + xml, e);
         }
         Element rootElement = document != null ? document.getRootElement() : null;
         return rootElement;

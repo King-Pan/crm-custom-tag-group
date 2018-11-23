@@ -26,25 +26,25 @@ public class CustGroupCheckImpl implements CustGroupCheck {
 
     @Override
     public String checkExistsNo(String jsonParam) {
-        log.warn("查询某号码是否在客户群内参数: [" + jsonParam + "]");
+        log.info("查询某号码是否在客户群内参数: [" + jsonParam + "]");
         long startTime = System.currentTimeMillis();
         String result = custGroupService.checkTagInGroup(jsonParam);
         long endTime = System.currentTimeMillis();
-        log.warn("查询某号码是否在客户群内,返回结果: " + result);
-        log.warn("集群信息:" + SettingCache.TYPE);
-        log.warn("查询某号码是否在客户群内共耗时: " + (endTime - startTime));
+        log.info("查询某号码是否在客户群内,返回结果: " + result);
+        log.info("集群信息:" + SettingCache.TYPE);
+        log.info("查询某号码是否在客户群内共耗时: " + (endTime - startTime));
         return result;
     }
 
     @Override
     public String getCustGroupList(String jsonParam) {
-        log.warn("查询某号码所有客户群-->参数: [" + jsonParam + "]");
+        log.info("查询某号码所有客户群-->参数: [" + jsonParam + "]");
         long startTime = System.currentTimeMillis();
         String result = custGroupService.getUserTagGroupList(jsonParam);
         long endTime = System.currentTimeMillis();
-        log.warn("查询某号码所有客户群 返回结果:{}", result);
-        log.warn("集群信息:" + SettingCache.TYPE);
-        log.warn("查询某号码所有客户群共耗时: " + (endTime - startTime));
+        log.info("查询某号码所有客户群 返回结果:{}", result);
+        log.info("集群信息:" + SettingCache.TYPE);
+        log.info("查询某号码所有客户群共耗时: " + (endTime - startTime));
         return result;
     }
 }

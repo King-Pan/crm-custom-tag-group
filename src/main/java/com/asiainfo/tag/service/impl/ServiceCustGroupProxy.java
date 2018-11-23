@@ -28,9 +28,9 @@ public class ServiceCustGroupProxy implements CustGroupService {
     @Override
     public String checkTagInGroup(String jsonParma) {
         String result = custGroupService.checkTagInGroup(jsonParma);
-        if (SettingCache.IS_AUTOSWITCH) {
-            JSONObject jsonObject = JSONObject.parseObject(result);
-            if (jsonObject.getString("retcode").equals("-3")) {
+        JSONObject jsonObject = JSONObject.parseObject(result);
+        if (jsonObject.getString("retcode").equals("-3")) {
+            if (SettingCache.IS_AUTOSWITCH) {
                 if (SettingCache.TYPE.equals(SettingCache.PROD_TYPE)) {
                     SettingCache.TYPE = SettingCache.SERVICE_TYPE;
                     log.error("================checkTagInGroup 切换前集群: 生产集群，切换后集群: 服务集群================");
@@ -39,19 +39,21 @@ public class ServiceCustGroupProxy implements CustGroupService {
                     log.error("================checkTagInGroup 切换前集群: 服务集群，切换后集群: 生产集群================");
                 }
                 result = custGroupService.checkTagInGroup(jsonParma);
+                result = getResult(result);
+            } else {
+                log.error("================checkTagInGroup 手动集群切换，出错不自动切换================");
+                log.error("================checkTagInGroup: " + jsonObject.getString("errmsg"));
             }
-        } else {
-            log.error("================checkTagInGroup 手动集群切换，出错不自动切换================");
         }
-        return getResult(result);
+        return result;
     }
 
     @Override
     public String getUserTagGroupList(String jsonParma) {
         String result = custGroupService.getUserTagGroupList(jsonParma);
-        if (SettingCache.IS_AUTOSWITCH) {
-            JSONObject jsonObject = JSONObject.parseObject(result);
-            if (jsonObject.getString("retcode").equals("-3")) {
+        JSONObject jsonObject = JSONObject.parseObject(result);
+        if (jsonObject.getString("retcode").equals("-3")) {
+            if (SettingCache.IS_AUTOSWITCH) {
                 log.error(jsonObject.getString("errmsg"));
                 if (SettingCache.TYPE.equals(SettingCache.PROD_TYPE)) {
                     SettingCache.TYPE = SettingCache.SERVICE_TYPE;
@@ -61,11 +63,13 @@ public class ServiceCustGroupProxy implements CustGroupService {
                     log.error("================getUserTagGroupList 切换前集群: 服务集群，切换后集群: 生产集群================");
                 }
                 result = custGroupService.getUserTagGroupList(jsonParma);
+                result = getResult(result);
+            } else {
+                log.error("================getUserTagGroupList 手动集群切换，出错不自动切换================");
+                log.error("================getUserTagGroupList: " + jsonObject.getString("errmsg"));
             }
-        } else {
-            log.error("================checkTagInGroup 手动集群切换，出错不自动切换================");
         }
-        return getResult(result);
+        return result;
     }
 
     private String getResult(String result) {

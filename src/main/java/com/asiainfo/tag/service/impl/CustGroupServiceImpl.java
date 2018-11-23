@@ -33,13 +33,12 @@ public class CustGroupServiceImpl implements CustGroupService {
 
     @Override
     public String checkTagInGroup(String jsonParma) {
-        log.info("checkTagInGroup params:" + jsonParma);
         JSONObject js = JSONObject.parseObject(jsonParma);
         String telno = js.getString("telnum");
         String groupid = js.getString("custgroupid");
         String tableName = getTableName();
         Map<String, String> rt = new HashMap<>(20);
-        log.warn("===============checkTagInGroup  本次查询的表为: " + tableName);
+        log.info("===============checkTagInGroup  本次查询的表为: " + tableName);
         try {
             if (HBaseUtils.tableExists(tableName)) {
                 String rowKey = md5RowKeyGenerator.generatePrefix(telno) + telno + "|" + groupid;
@@ -48,10 +47,9 @@ public class CustGroupServiceImpl implements CustGroupService {
                 sb.append(md5RowKeyGenerator.generatePrefix(telno)).append(telno).append("|");
                 sb.append(groupid.substring(0, 6)).append(groupId);
                 String enKey = sb.toString();
-                if(log.isInfoEnabled()){
-                    log.info("查询客户群是否存在startRow:{},endRow:{}",rowKey,enKey);
+                if(log.isDebugEnabled()){
+                    log.debug("查询客户群是否存在startRow:{},endRow:{}",rowKey,enKey);
                 }
-                long startTime = System.currentTimeMillis();
                 if (HBaseUtils.scanQueryList(rowKey, enKey, tableName).size() > 0) {
                     rt.put("retcode", "0");
                     rt.put("errmsg", "数据存在");
@@ -60,10 +58,6 @@ public class CustGroupServiceImpl implements CustGroupService {
                     rt.put("retcode", "0");
                     rt.put("errmsg", "数据不存在");
                     rt.put("telstatus", "-1");
-                }
-                long endTime = System.currentTimeMillis();
-                if(log.isInfoEnabled()){
-                    log.info("查询号码{}，是否在客户群:{}内，共耗时:{}毫秒", telno, groupid, (endTime - startTime));
                 }
             } else {
                 rt.put("retcode", "-3");
@@ -82,20 +76,22 @@ public class CustGroupServiceImpl implements CustGroupService {
 
     @Override
     public String getUserTagGroupList(String jsonParma) {
-        log.info("getUserTagGroupList 查询参数:" + jsonParma);
         JSONObject js = JSONObject.parseObject(jsonParma);
         String telno = js.getString("telnum");
         String tableName = getTableName();
         Map<String, Object> rt = new HashMap<>(20);
         log.warn("===============getUserTagGroupList 本次查询的表为: " + tableName);
         try {
-            long startTime = System.currentTimeMillis();
             if (HBaseUtils.tableExists(tableName)) {
                 //13477343118 - 开始行： oc513477343118
-                String rowKey = md5RowKeyGenerator.generatePrefix(telno) + telno;
-                String endKey = md5RowKeyGenerator.generatePrefix(telno) + String.valueOf(Long.valueOf(telno) + 1);
-                if(log.isInfoEnabled()){
-                    log.info("查询客户信息: rowKey=" + rowKey + ",endKey=" + rowKey);
+                StringBuilder rowKeySb = new StringBuilder(md5RowKeyGenerator.generatePrefix(telno).toString());
+                rowKeySb.append(telno);
+                String rowKey = rowKeySb.toString();
+                StringBuilder endKeySb = new StringBuilder(md5RowKeyGenerator.generatePrefix(telno).toString());
+                endKeySb.append( String.valueOf(Long.valueOf(telno) + 1));
+                String endKey = endKeySb.toString();
+                if(log.isDebugEnabled()){
+                    log.debug("查询客户信息: rowKey={},endKey={}",rowKey ,rowKey);
                 }
                 List<String> queryList = HBaseUtils.scanQueryList(rowKey, endKey, tableName);
                 List<Map<String, String>> tmp = new ArrayList<>(20);
@@ -112,10 +108,6 @@ public class CustGroupServiceImpl implements CustGroupService {
             } else {
                 rt.put("retcode", "-3");
                 rt.put("errmsg", "表" + tableName + "未生成");
-            }
-            long endTime = System.currentTimeMillis();
-            if(log.isInfoEnabled()){
-                log.info("查询号码{}所有客户群，共耗时:{}毫秒", telno, (endTime - startTime));
             }
         } catch (Exception e) {
             log.error("Hbase查询出错：" + e.getMessage(), e);

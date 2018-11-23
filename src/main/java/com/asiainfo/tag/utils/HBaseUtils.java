@@ -40,7 +40,6 @@ public class HBaseUtils {
             admin = getConnection().getAdmin();
             isExists = admin.tableExists(TableName.valueOf(tableName));
         } catch (Throwable e) {
-            e.printStackTrace();
             log.error("判断表是否存在出错： \n" + e.getMessage(), e);
             throw new RuntimeException("查询表是否存在出错: [" + tableName + "]");
         }finally {
@@ -61,8 +60,9 @@ public class HBaseUtils {
                                              String tableName) {
         List<String> result = new ArrayList<>(10);
         ResultScanner rs = null;
+        Table query = null;
         try {
-            Table query = getConnection().getTable(TableName.valueOf(tableName));
+            query = getConnection().getTable(TableName.valueOf(tableName));
             Scan scan = new Scan();
             scan.setStartRow(Bytes.toBytes(startRowKey));
             scan.setStopRow(Bytes.toBytes(endRowKey));
@@ -71,12 +71,18 @@ public class HBaseUtils {
                 result.add(Bytes.toString(res.getRow()));
             }
         } catch (Throwable e) {
-            e.printStackTrace();
             log.error("[scanQueryList]方法出错: " + e.getMessage(), e);
             throw new RuntimeException("查询数据列表【scanQueryList】出错", e);
         } finally {
             if (rs != null) {
                 rs.close();
+            }
+            if(query!=null){
+                try {
+                    query.close();
+                } catch (IOException e) {
+                    log.error("关闭Table失败",e);
+                }
             }
         }
         return result;
@@ -92,7 +98,6 @@ public class HBaseUtils {
             try {
                 connection.getAdmin();
             } catch (Throwable e) {
-                e.printStackTrace();
                 throw new RuntimeException(model + "获取连接失败");
             }
         }

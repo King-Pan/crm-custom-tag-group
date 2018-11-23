@@ -14,7 +14,7 @@ public class SettingCache {
 
     public static final String AUTO = "AUTO";
 
-    public static final String DEFAULT_TYPE = "service";
+    public static  String DEFAULT_TYPE = "service";
 
     public static final String PROD_TYPE = "prod";
 
