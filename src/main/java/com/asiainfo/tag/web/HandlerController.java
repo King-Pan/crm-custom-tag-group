@@ -75,10 +75,10 @@ public class HandlerController {
             xpath.setNamespaceURIs(map);
             Node n = xpath.selectSingleNode(document);
             JSONObject jsonObject = FastJsonUtils.getJsonObject(n.getStringValue());
-            if ("-2".equals(jsonObject.getString("retcode"))) {
-                result = "号码:" + telnum + "，不在客户群：" + custgroupid + "内   返回信息：" + jsonObject.getString("errmsg");
-            } else {
+            if ("0".equals(jsonObject.getString("telstatus"))) {
                 result = "号码:" + telnum + "，在客户群：" + custgroupid + "内";
+            } else {
+                result = "号码:" + telnum + "，不在客户群：" + custgroupid + "内   返回信息：" + jsonObject.getString("errmsg");
             }
             log.info("========> 手动测试cxf {}", result);
         } catch (Throwable e) {
